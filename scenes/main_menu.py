@@ -7,6 +7,7 @@ from .constants import Action
 
 class MainMenuScene(QuitableScene):
     NAME = "Main Menu"
+    logger = logging.getLogger("MainMenuScene")
 
     def __init__(self, screen: pygame.Surface):
         super().__init__(screen)
@@ -18,7 +19,7 @@ class MainMenuScene(QuitableScene):
         self.all_sprites.add(self.quit_button, self.new_game_button)
 
     def new_game(self):
-        logging.debug("I'm trying to start new game")
+        self.logger.debug("I'm trying to start new game")
         self.status.done = True
         self.status.success = True
         self.status.action = Action.NEW_GAME

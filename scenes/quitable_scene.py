@@ -1,12 +1,17 @@
+import logging
+from pathlib import Path
+
+import pygame
+
+from config import SPRITES_FOLDER
 from toolbox.button.button import Button
 from toolbox.scene import Scene
-import pygame
-from config import SPRITES_FOLDER
-from pathlib import Path
+
 from .constants import Action
 
 
 class QuitableScene(Scene):
+    logger = logging.getLogger("MainMenuScene")
 
     def __init__(self, screen: pygame.Surface):
         super().__init__(screen)
@@ -20,6 +25,7 @@ class QuitableScene(Scene):
     def quit_game(self):
         """Callback method to quit the game."""
         self.status.done = True
+        self.status.success = True
         self.status.action = Action.QUIT_GAME
 
     def _make_quit_button(self):

@@ -11,9 +11,10 @@ from .status import Status
 
 class Scene:
     NAME = "Undefined"
+    logger = logging.getLogger("Scene")
 
     def __init__(self, screen: pygame.Surface):
-        logging.info(f"Loading {self.NAME} scene...")
+        self.logger.info("Loading...")
 
         self.done = False
         self.clock = pygame.time.Clock()
@@ -47,7 +48,7 @@ class Scene:
     def load(self) -> None:
         raise NotImplementedError()
 
-    def run(self)->Status:
+    def run(self) -> Status:
         while not self.status.done:
             self.dt = self.clock.tick(30) / 1000
             self.handle_events()

@@ -9,6 +9,7 @@ from pathlib import Path
 
 class LocustGuildScene(QuitableScene):
     NAME = "Locust Guild"
+    logger = logging.getLogger("LocustGuildScene")
 
     def __init__(self, screen: pygame.Surface):
         super().__init__(screen)
