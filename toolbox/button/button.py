@@ -1,6 +1,7 @@
 import collections
 import pygame
 from config import DEFAULT_FONT
+from toolbox.utils.drawing import hue_image
 
 
 # Button is a sprite subclass, that means it can be added to a sprite group.
@@ -9,14 +10,8 @@ from config import DEFAULT_FONT
 class Button(pygame.sprite.Sprite):
 
     # Default button images/pygame.Surfaces.
-    DEFAULT_IMAGE_NORMAL = pygame.Surface((100, 32))
-    DEFAULT_IMAGE_NORMAL.fill(pygame.Color("dodgerblue1"))
-
-    DEFAULT_IMAGE_HOVER = pygame.Surface((100, 32))
-    DEFAULT_IMAGE_HOVER.fill(pygame.Color("lightskyblue"))
-
-    DEFAULT_IMAGE_DOWN = pygame.Surface((100, 32))
-    DEFAULT_IMAGE_DOWN.fill(pygame.Color("aquamarine1"))
+    DEFAULT_IMAGE = pygame.Surface((100, 32))
+    DEFAULT_IMAGE.fill(pygame.Color("dodgerblue1"))
 
     def __init__(
         self,
@@ -24,34 +19,39 @@ class Button(pygame.sprite.Sprite):
         size: pygame.Vector2,
         callback: collections.abc.Callable,
         font=DEFAULT_FONT,
-        text="",
+        text=None,
         text_color=(0, 0, 0),
-        image_normal=None,
-        image_hover=None,
-        image_down=None,
+        image=None,
     ):
         super().__init__()
         # Scale the images to the desired size (doesn't modify the originals).
-        self.image_normal = image_normal if image_normal else self.DEFAULT_IMAGE_NORMAL
+        self.image_normal = image if image else self.DEFAULT_IMAGE
         self.image_normal = pygame.transform.scale(self.image_normal, size)
 
-        self.image_hover = image_hover if image_hover else self.DEFAULT_IMAGE_HOVER
-        self.image_hover = pygame.transform.scale(self.image_hover, size)
+        # lighter image
+        self.image_hover = hue_image(
+            image=self.image_normal,
+            color=(255, 255, 255, 100),
+        )
 
-        self.image_down = image_down if image_down else self.DEFAULT_IMAGE_DOWN
-        self.image_down = pygame.transform.scale(self.image_down, size)
+        # darker image
+        self.image_down = hue_image(
+            image=self.image_normal,
+            color=(0, 0, 0, 100),
+        )
 
         self.image = self.image_normal  # The currently active image.
         self.rect = self.image.get_rect(center=pos)
 
-        # To center the text rect.
-        image_center = self.image.get_rect().center
-        text_surf = font.render(text, True, text_color)
-        text_rect = text_surf.get_rect(center=image_center)
+        if text:
+            # To center the text rect.
+            image_center = self.image.get_rect().center
+            text_surf = font.render(text, True, text_color)
+            text_rect = text_surf.get_rect(center=image_center)
 
-        # Blit the text onto the images.
-        for image in (self.image_normal, self.image_hover, self.image_down):
-            image.blit(text_surf, text_rect)
+            # Blit the text onto the images.
+            for image in (self.image_normal, self.image_hover, self.image_down):
+                image.blit(text_surf, text_rect)
 
         # This function will be called when the button gets pressed.
         self.callback = callback

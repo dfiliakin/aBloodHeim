@@ -14,7 +14,7 @@ screen = pygame.display.set_mode((800, 600))
 def main():
     pygame.init()
 
-    Game(screen).run()
+    Game(screen)
 
     pygame.quit()
 
