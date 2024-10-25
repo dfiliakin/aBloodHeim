@@ -1,3 +1,5 @@
+from game.game import Game
+from objects.guild.repository.guild_repository import GuildRepository
 from toolbox.button.button import Button
 import logging
 import pygame
@@ -9,8 +11,9 @@ class MainMenuScene(QuitableScene):
     NAME = "Main Menu"
     logger = logging.getLogger("MainMenuScene")
 
-    def __init__(self, screen: pygame.Surface):
-        super().__init__(screen)
+    def __init__(self, game: Game):
+
+        super().__init__(game)
 
         self.new_game_button = self._make_new_game_button()
 
@@ -20,6 +23,11 @@ class MainMenuScene(QuitableScene):
 
     def new_game(self):
         self.logger.debug("I'm trying to start new game")
+
+        # FIXME: create a new guild here.
+        new_guild = GuildRepository.fetch_guild_by_guild_name("test")
+        self.logger.info(f"New guild: {new_guild}")
+
         self.status.done = True
         self.status.success = True
         self.status.action = Action.NEW_GAME

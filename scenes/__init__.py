@@ -1,8 +1,8 @@
-from .main_menu import MainMenuScene
-from .locust_guild import LocustGuildScene
+from .main_menu_scene import MainMenuScene
+from .guild_scene import GuildScene
 
 
 __all__ = [
     "MainMenuScene",
-    "LocustGuildScene",
+    "GuildScene",
 ]

@@ -1,116 +1,116 @@
 import logging
 from abc import ABC, abstractmethod
 
-from scenes import LocustGuildScene, MainMenuScene
+from scenes import GuildScene, MainMenuScene
 from toolbox.scene import Status as SceneStatus
 
 
 class GameState(ABC):
     def __init__(self):
-        self.screen = None
+        self.game = None
         self.scene = None
 
     def run(self) -> SceneStatus:
         return self.scene.run()
 
     @abstractmethod
-    def main_menu(self, screen):
+    def main_menu(self, game):
         pass
 
     @abstractmethod
-    def locust_guild(self, screen):
+    def go_guild(self, game):
         pass
 
     @abstractmethod
-    def bloodheim(self, screen):
+    def go_bloodheim(self, game):
         pass
 
     @abstractmethod
-    def fight(self, hero, enemies, screen):
+    def start_fight(self, hero, enemies, game):
         pass
 
 
 class MainMenuState(GameState):
     logger = logging.getLogger("MainMenuScene")
 
-    def __init__(self, screen):
-        self.screen = screen
-        self.scene = MainMenuScene(self.screen)
+    def __init__(self, game):
+        self.game = game
+        self.scene = MainMenuScene(self.game)
 
-    def main_menu(self, screen):
+    def main_menu(self, game):
         self.logger.info("Already in the main menu.")
 
-    def locust_guild(self, screen):
-        return LocustGuildState(screen)
+    def go_guild(self, game):
+        return GuildState(game)
 
-    def bloodheim(self, screen):
-        return BloodheimState(screen)
+    def go_bloodheim(self, game):
+        return BloodheimState(game)
 
-    def fight(self, hero, enemies, screen):
+    def start_fight(self, hero, enemies, game):
         self.logger.info("Cannot get into the fight form the menu.")
 
 
-class LocustGuildState(GameState):
-    logger = logging.getLogger("LocustGuildState")
+class GuildState(GameState):
+    logger = logging.getLogger("GuildState")
 
-    def __init__(self, screen):
-        self.screen = screen
-        self.scene = LocustGuildScene(self.screen)
+    def __init__(self, game):
+        self.game = game
+        self.scene = GuildScene(self.game)
 
-    def main_menu(self, screen):
+    def main_menu(self, game):
         return MainMenuState()
 
-    def locust_guild(self, screen):
-        self.logger.info("Already in the locust guild.")
+    def go_guild(self, game):
+        self.logger.info("Already in the Guild.")
 
-    def bloodheim(self, screen):
+    def go_bloodheim(self, game):
         return BloodheimState()
 
-    def fight(self, hero, enemies, screen):
-        self.logger.info("Cannot get into the fight directly from the locust guild.")
+    def start_fight(self, hero, enemies, game):
+        self.logger.info("Cannot get into the fight directly from the Guild.")
 
 
 class BloodheimState(GameState):
     logger = logging.getLogger("BloodheimState")
 
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self, game):
+        self.game = game
         self.scene = None
 
-    def main_menu(self, screen):
-        return MainMenuState(screen)
+    def main_menu(self, game):
+        return MainMenuState(game)
 
-    def locust_guild(self, screen):
-        return LocustGuildState(screen)
+    def go_guild(self, game):
+        return GuildState(game)
 
-    def bloodheim(self, screen):
+    def go_bloodheim(self, game):
         self.logger.info("Already in the bloodheim.")
 
-    def fight(self, hero, enemies, screen):
+    def start_fight(self, hero, enemies, game):
         self.logger.info("Starting the fight...")
         self.logger.info(f"    - Hero: {hero}")
         self.logger.info(f"    - Enemies: {enemies}")
-        FightState(hero, enemies, screen)
+        FightState(hero, enemies, game)
 
 
 class FightState(GameState):
     logger = logging.getLogger("FightState")
 
-    def __init__(self, hero, enemies, screen):
-        self.screen = screen
+    def __init__(self, hero, enemies, game):
+        self.game = game
         self.scene = None
 
         self.hero = hero
         self.enemies = enemies
 
-    def main_menu(self, screen):
+    def main_menu(self, game):
         self.logger.info("Cannot leave the fight.")
 
-    def locust_guild(self, screen):
+    def go_guild(self, game):
         self.logger.info("Cannot leave the fight.")
 
-    def bloodheim(self, screen):
+    def go_bloodheim(self, game):
         BloodheimState()
 
-    def fight(self, hero, enemies, screen):
+    def start_fight(self, hero, enemies, game):
         self.logger.info("Already in the fight.")

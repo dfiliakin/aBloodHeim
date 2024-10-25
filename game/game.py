@@ -1,18 +1,29 @@
 import logging
 
-from .game_state import MainMenuState
-from scenes.constants import Action
+import pygame
 
 
 class Game:
     logger = logging.getLogger("Game")
 
-    def __init__(self, screen):
-        self.current_state = MainMenuState(screen)
+    def __init__(self, screen: pygame.Surface):
+        # Lazy import to avoid circular import
+        from .game_state_manager import GameStateManager
+
+        self.screen = screen
+        self.state_manager = GameStateManager(game=self)
+        self.guild = None
+
+    def run(self):
+        # Lazy import to avoid circular import
+        from scenes.constants import Action
 
         while True:
             self.logger.info("=" * 50)
-            end_scene_status = self.current_state.run()
+            current_scene = self.state_manager.current_state.scene
+            self.logger.info(f"Running {current_scene.NAME} ...")
+
+            end_scene_status = current_scene.run()
             self.logger.info(end_scene_status)
 
             if not end_scene_status.success:
@@ -20,26 +31,11 @@ class Game:
                 break
 
             if end_scene_status.action == Action.QUIT_GAME:
+                self.logger.info(f"Quiting {current_scene.NAME} ...")
                 break
 
             if end_scene_status.action == Action.NEW_GAME:
-                self.locust_guild(screen)
+                self.state_manager.go_guild(game=self)
 
             else:
                 self.logger.error(f"Unexpected action: {end_scene_status.action}")
-
-    def main_menu(self, screen):
-        self.logger.debug("main_menu")
-        self.current_state = self.current_state.main_menu(screen)
-
-    def locust_guild(self, screen):
-        self.logger.debug("locust_guild")
-        self.current_state = self.current_state.locust_guild(screen)
-
-    def bloodheim(self, screen):
-        self.logger.debug("bloodheim")
-        self.current_state = self.current_state.bloodheim(screen)
-
-    def fight(self, hero, enemies, screen):
-        self.logger.debug("fight")
-        self.current_state = self.current_state.fight(hero, enemies, screen)

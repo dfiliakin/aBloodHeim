@@ -6,10 +6,12 @@ import pygame
 from config import SPRITES_FOLDER
 from pathlib import Path
 
+from objects.guild import Guild
 
-class LocustGuildScene(QuitableScene):
-    NAME = "Locust Guild"
-    logger = logging.getLogger("LocustGuildScene")
+
+class GuildScene(QuitableScene):
+    NAME = "Guild"
+    logger = logging.getLogger("GuildScene")
 
     def __init__(self, screen: pygame.Surface):
         super().__init__(screen)

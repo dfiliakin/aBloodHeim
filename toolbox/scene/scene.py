@@ -3,6 +3,7 @@ from abc import abstractmethod
 
 import pygame
 
+from game.game import Game
 from toolbox.button.button import Button
 from toolbox.utils.patterns import cached
 
@@ -13,12 +14,13 @@ class Scene:
     NAME = "Undefined"
     logger = logging.getLogger("Scene")
 
-    def __init__(self, screen: pygame.Surface):
+    def __init__(self, game: Game):
         self.logger.info("Loading...")
+
+        self.game = game
 
         self.done = False
         self.clock = pygame.time.Clock()
-        self.screen = screen
 
         # Contains all sprites. Also put the button sprites into a
         # separate group in your own game.
@@ -30,7 +32,7 @@ class Scene:
     @property
     @cached()
     def screen_bottom_right_corner(self):
-        return self.screen.get_size()
+        return self.game.screen.get_size()
 
     @property
     @cached()
@@ -69,6 +71,6 @@ class Scene:
         self.all_sprites.update(self.dt)
 
     def draw(self):
-        self.screen.fill((30, 30, 30))
-        self.all_sprites.draw(self.screen)
+        self.game.screen.fill((30, 30, 30))
+        self.all_sprites.draw(self.game.screen)
         pygame.display.flip()

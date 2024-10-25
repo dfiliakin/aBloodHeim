@@ -4,6 +4,7 @@ from pathlib import Path
 import pygame
 
 from config import SPRITES_FOLDER
+from game.game import Game
 from toolbox.button.button import Button
 from toolbox.scene import Scene
 
@@ -13,8 +14,8 @@ from .constants import Action
 class QuitableScene(Scene):
     logger = logging.getLogger("MainMenuScene")
 
-    def __init__(self, screen: pygame.Surface):
-        super().__init__(screen)
+    def __init__(self, game: Game):
+        super().__init__(game)
 
         self.quit_button = self._make_quit_button()
 
