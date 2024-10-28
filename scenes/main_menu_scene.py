@@ -1,6 +1,6 @@
 from game.game import Game
 from objects.guild.repository.guild_repository import GuildRepository
-from toolbox.button.button import Button
+from toolbox.ui.button import Button
 import logging
 import pygame
 from .quitable_scene import QuitableScene
@@ -26,6 +26,8 @@ class MainMenuScene(QuitableScene):
 
         # FIXME: create a new guild here.
         new_guild = GuildRepository.fetch_guild_by_guild_name("test")
+        self.game.guild = new_guild
+
         self.logger.info(f"New guild: {new_guild}")
 
         self.status.done = True

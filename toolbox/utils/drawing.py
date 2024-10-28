@@ -4,7 +4,7 @@ import pygame
 def hue_image(
     image: pygame.Surface,
     color: pygame.Color,
-):
+) -> pygame.Surface:
 
     hue_surf = pygame.Surface(image.get_size(), pygame.SRCALPHA)
     hue_surf.fill(color)

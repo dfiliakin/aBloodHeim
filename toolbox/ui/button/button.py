@@ -1,32 +1,25 @@
 import collections
 import pygame
 from config import DEFAULT_FONT
+from ..textbox.textbox import Textbox
 from toolbox.utils.drawing import hue_image
 
 
 # Button is a sprite subclass, that means it can be added to a sprite group.
 # You can draw and update all sprites in a group by
 # calling `group.update()` and `group.draw(screen)`.
-class Button(pygame.sprite.Sprite):
+class Button(Textbox):
 
     # Default button images/pygame.Surfaces.
     DEFAULT_IMAGE = pygame.Surface((100, 32))
     DEFAULT_IMAGE.fill(pygame.Color("dodgerblue1"))
 
-    def __init__(
-        self,
-        pos: pygame.Vector2,
-        size: pygame.Vector2,
-        callback: collections.abc.Callable,
-        font=DEFAULT_FONT,
-        text=None,
-        text_color=(0, 0, 0),
-        image=None,
-    ):
-        super().__init__()
+    def __init__(self, callback: collections.abc.Callable, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         # Scale the images to the desired size (doesn't modify the originals).
-        self.image_normal = image if image else self.DEFAULT_IMAGE
-        self.image_normal = pygame.transform.scale(self.image_normal, size)
+        self.image_normal = self.image if self.image else self.DEFAULT_IMAGE
+        self.image_normal = pygame.transform.scale(self.image_normal, self.size)
 
         # lighter image
         self.image_hover = hue_image(
@@ -41,19 +34,8 @@ class Button(pygame.sprite.Sprite):
         )
 
         self.image = self.image_normal  # The currently active image.
-        self.rect = self.image.get_rect(center=pos)
+        self.rect = self.image.get_rect(center=self.pos)
 
-        if text:
-            # To center the text rect.
-            image_center = self.image.get_rect().center
-            text_surf = font.render(text, True, text_color)
-            text_rect = text_surf.get_rect(center=image_center)
-
-            # Blit the text onto the images.
-            for image in (self.image_normal, self.image_hover, self.image_down):
-                image.blit(text_surf, text_rect)
-
-        # This function will be called when the button gets pressed.
         self.callback = callback
         self.button_down = False
 

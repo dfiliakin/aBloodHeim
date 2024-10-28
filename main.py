@@ -8,7 +8,7 @@ from game import Game
 
 logging.basicConfig(level=logging.DEBUG)
 
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((1600, 900))
 
 
 def main():

@@ -5,7 +5,7 @@ import pygame
 
 from config import SPRITES_FOLDER
 from game.game import Game
-from toolbox.button.button import Button
+from toolbox.ui.button import Button
 from toolbox.scene import Scene
 
 from .constants import Action
@@ -31,7 +31,7 @@ class QuitableScene(Scene):
 
     def _make_quit_button(self):
         quit_button_image = pygame.image.load(
-            Path.joinpath(SPRITES_FOLDER, "quit_button.png")
+            Path.joinpath(SPRITES_FOLDER, "quit_button_sprite.png")
         ).convert_alpha()
         quit_button_size = pygame.Vector2(50, 50)
         return Button(

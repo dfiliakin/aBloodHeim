@@ -1,6 +1,9 @@
 import logging
+from typing import Optional
 
 import pygame
+
+from objects.guild.guild import Guild
 
 
 class Game:
@@ -12,7 +15,7 @@ class Game:
 
         self.screen = screen
         self.state_manager = GameStateManager(game=self)
-        self.guild = None
+        self.guild: Optional[Guild] = None
 
     def run(self):
         # Lazy import to avoid circular import

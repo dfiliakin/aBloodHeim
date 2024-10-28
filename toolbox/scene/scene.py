@@ -1,10 +1,12 @@
 import logging
 from abc import abstractmethod
+from pathlib import Path
 
 import pygame
 
+from config import SPRITES_FOLDER
 from game.game import Game
-from toolbox.button.button import Button
+from toolbox.ui.button import Button
 from toolbox.utils.patterns import cached
 
 from .status import Status
@@ -32,19 +34,25 @@ class Scene:
     @property
     @cached()
     def screen_bottom_right_corner(self):
-        return self.game.screen.get_size()
+        return pygame.Vector2(self.game.screen.get_size())
+
+    @property
+    @cached()
+    def screen_bottom_left_corner(self):
+        _, y = self.screen_bottom_right_corner
+        return pygame.Vector2(0, y)
 
     @property
     @cached()
     def screen_top_right_corner(self):
         x, _ = self.screen_bottom_right_corner
-        return x, 0
+        return pygame.Vector2(x, 0)
 
     @property
     @cached()
     def screen_center(self):
         x, y = self.screen_bottom_right_corner
-        return x // 2, y // 2
+        return pygame.Vector2(x // 2, y // 2)
 
     @abstractmethod
     def load(self) -> None:
