@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 import pygame
 from config import DEFAULT_FONT
 from ..image.image import Image
@@ -18,7 +19,8 @@ class Textbox(Image):
         font=DEFAULT_FONT,
         text: str = None,
         text_color=(0, 0, 0),
-        image: pygame.Surface = None,
+        text_offset: Optional[pygame.Vector2] = None,
+        image: Optional[pygame.Surface] = None,
         *args,
         **kwargs,
     ):
@@ -33,6 +35,7 @@ class Textbox(Image):
 
         self.font = font
         self.text_color = text_color
+        self.text_offset = text_offset if text_offset else pygame.Vector2(0, 0)
 
         if text:
             self.text = text
@@ -49,7 +52,7 @@ class Textbox(Image):
         # To center the text rect.
         image_center = self._base_image.get_rect().center
         text_surf = self.font.render(self.text, True, self.text_color)
-        text_rect = text_surf.get_rect(center=image_center)
+        text_rect = text_surf.get_rect(center=image_center + self.text_offset)
 
         # Blit the text onto the base_image.
         self.image = self._base_image.copy()

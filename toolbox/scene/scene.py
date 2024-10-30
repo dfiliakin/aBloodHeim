@@ -44,6 +44,11 @@ class Scene:
 
     @property
     @cached()
+    def screen_top_left_corner(self):
+        return pygame.Vector2(0, 0)
+
+    @property
+    @cached()
     def screen_top_right_corner(self):
         x, _ = self.screen_bottom_right_corner
         return pygame.Vector2(x, 0)
@@ -53,6 +58,18 @@ class Scene:
     def screen_center(self):
         x, y = self.screen_bottom_right_corner
         return pygame.Vector2(x // 2, y // 2)
+
+    @property
+    @cached()
+    def screen_bottom_center(self):
+        x, y = self.screen_bottom_right_corner
+        return pygame.Vector2(x // 2, y)
+
+    @property
+    @cached()
+    def screen_top_center(self):
+        x, y = self.screen_top_right_corner
+        return pygame.Vector2(x // 2, y)
 
     @abstractmethod
     def load(self) -> None:
