@@ -17,7 +17,7 @@ class Image(pygame.sprite.Sprite):
         self,
         pos: pygame.Vector2,
         size: pygame.Vector2 = None,
-        image=None,
+        image: pygame.Surface = None,
     ):
         super().__init__()
 
@@ -26,7 +26,6 @@ class Image(pygame.sprite.Sprite):
         # Scale the images to the desired size (doesn't modify the originals).
         if size:
             self.image = pygame.transform.scale(self.image, size)
-        self.size = self.image.get_size()
-
+        self.size = pygame.Vector2(self.image.get_size())
         self.pos = pos
         self.rect = self.image.get_rect(center=pos)

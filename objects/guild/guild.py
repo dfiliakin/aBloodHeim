@@ -3,7 +3,11 @@ from objects.unit import Hero
 from objects.unit.repository import HeroRepository
 
 
-Resources = namedtuple("Resources", "GOLD MANA MATERIALS", defaults=(0, 0, 0))
+class Resources:
+    def __init__(self, gold=0, mana=0, materials=0):
+        self.gold = gold
+        self.mana = mana
+        self.materials = materials
 
 
 class Guild:
@@ -22,7 +26,7 @@ class Guild:
     def from_json(cls, json_data):
         return cls(
             name=json_data["name"],
-            resources=Resources(*json_data["resources"]),
+            resources=Resources(**json_data["resources"]),
             heroes=HeroRepository.fetch_heroes_by_names(
                 hero_names=json_data.get("hero_names", []),
                 guild_name=json_data["name"],
