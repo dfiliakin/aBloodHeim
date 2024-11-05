@@ -1,9 +1,10 @@
 import logging
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import pygame
 
-from objects.guild.guild import Guild
+if TYPE_CHECKING:
+    from objects.guild.guild import Guild
 
 
 class Game:
@@ -15,7 +16,7 @@ class Game:
 
         self.screen = screen
         self.state_manager = GameStateManager(game=self)
-        self.guild: Optional[Guild] = None
+        self.guild: Optional["Guild"] = None
 
     def run(self):
         # Lazy import to avoid circular import

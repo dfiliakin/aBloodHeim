@@ -1,7 +1,10 @@
 import logging
 from typing import Optional
+
 import pygame
+
 from config import DEFAULT_FONT
+
 from ..image.image import Image
 
 
@@ -57,8 +60,3 @@ class Textbox(Image):
         # Blit the text onto the base_image.
         self.image = self._base_image.copy()
         self.image.blit(text_surf, text_rect)
-
-    @text.deleter
-    def text(self):
-        del self.text
-        self.image = self._base_image.copy()

@@ -1,7 +1,4 @@
-import collections
 import pygame
-from config import DEFAULT_FONT
-from toolbox.utils.drawing import hue_image
 
 
 # Image is a sprite subclass, that means it can be added to a sprite group.

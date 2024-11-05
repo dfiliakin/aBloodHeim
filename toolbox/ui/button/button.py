@@ -1,7 +1,6 @@
 import collections
 import pygame
-from config import DEFAULT_FONT
-from ..textbox.textbox import Textbox
+from toolbox.ui.textbox import Textbox
 from toolbox.utils.drawing import hue_image
 
 

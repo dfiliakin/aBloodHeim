@@ -10,7 +10,7 @@ class GuildRepository:
     SAVE_FILE_POSTFIX = "_save.json"
 
     @classmethod
-    def fetch_guild_by_guild_name(cls, guild_name):
+    def fetch_guild_by_guild_name(cls, guild_name: str) -> Guild:
         filename = guild_name + cls.SAVE_FILE_POSTFIX
         filepath = Path.joinpath(SAVE_FOLDER, filename)
 

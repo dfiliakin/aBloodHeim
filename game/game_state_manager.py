@@ -1,13 +1,16 @@
 import logging
+from typing import TYPE_CHECKING
 
-from .game import Game
 from .game_state import MainMenuState
+
+if TYPE_CHECKING:
+    from .game import Game
 
 
 class GameStateManager:
     logger = logging.getLogger("Game State Manager")
 
-    def __init__(self, game):
+    def __init__(self, game: "Game"):
         self.current_state = MainMenuState(game)
 
     def main_menu(self, game):

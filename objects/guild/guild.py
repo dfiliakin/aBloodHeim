@@ -1,6 +1,8 @@
-from collections import namedtuple
-from objects.unit import Hero
+from typing import TYPE_CHECKING
 from objects.unit.repository import HeroRepository
+
+if TYPE_CHECKING:
+    from objects.unit import Hero
 
 
 class Resources:
@@ -16,7 +18,7 @@ class Guild:
         self,
         name: str,
         resources: Resources,
-        heroes: list[Hero],
+        heroes: list["Hero"],
     ):
         self.name = name
         self.resources = resources

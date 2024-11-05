@@ -1,20 +1,23 @@
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pygame
 
 from config import SPRITES_FOLDER
-from game.game import Game
-from toolbox.ui.button import Button
 from toolbox.scene import Scene
+from toolbox.ui.button import Button
 
 from .constants import Action
+
+if TYPE_CHECKING:
+    from game.game import Game
 
 
 class QuitableScene(Scene):
     logger = logging.getLogger("MainMenuScene")
 
-    def __init__(self, game: Game):
+    def __init__(self, game: "Game"):
         super().__init__(game)
 
         self.quit_button = self._make_quit_button()

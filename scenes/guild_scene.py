@@ -1,13 +1,17 @@
+import logging
+from pathlib import Path
+
+import pygame
+
+from config import SPRITES_FOLDER
 from game.game import Game
 from toolbox.ui.button import Button
 from toolbox.ui.image import Image
 from toolbox.ui.textbox import Textbox
+from toolbox.ui.window.window import Window
 from toolbox.utils.debugging import create_test_button
+
 from .quitable_scene import QuitableScene
-import logging
-import pygame
-from config import SPRITES_FOLDER
-from pathlib import Path
 
 
 class GuildScene(QuitableScene):
@@ -40,18 +44,24 @@ class GuildScene(QuitableScene):
         )
 
         # TEST button
-        self.test_button = create_test_button(
-            pos=self.screen_center,
-            callback=self._test,
+        # self.test_button = create_test_button(
+        #     pos=self.screen_center,
+        #     callback=self._test,
+        # )
+
+        # self.all_buttons.add(self.test_button)
+        # self.all_sprites.add(self.test_button)
+
+        # MARKET, HIRE, STORAGE Windows
+        self._make_windows()
+        self.all_windows.extend(
+            [self.market_window, self.hire_window, self.storage_window],
         )
 
-        self.all_buttons.add(self.test_button)
-        self.all_sprites.add(self.test_button)
-
-        # SHOP, HIRE, STORAGE buttons
+        # MARKET, HIRE, STORAGE Buttons
         self._make_buttons()
-        self.all_buttons.add(self.shop_button, self.hire_button, self.storage_button)
-        self.all_sprites.add(self.shop_button, self.hire_button, self.storage_button)
+        self.all_buttons.add(self.market_button, self.hire_button, self.storage_button)
+        self.all_sprites.add(self.market_button, self.hire_button, self.storage_button)
 
     def _test(self):
         self.game.guild.resources.gold += 1
@@ -133,7 +143,17 @@ class GuildScene(QuitableScene):
 
         return indicator_sprite
 
+    def _make_windows(self):
+        """Makes MARKET, HIRE, STORAGE Windows"""
+
+        pop_up_window_pos = self.screen_center + pygame.Vector2(100, -100)
+
+        self.market_window = self._make_pop_up_window("Market", pop_up_window_pos)
+        self.hire_window = self._make_pop_up_window("Hire", pop_up_window_pos)
+        self.storage_window = self._make_pop_up_window("Storage", pop_up_window_pos)
+
     def _make_buttons(self):
+        """Makes MARKET, HIRE, STORAGE Buttons"""
 
         button_size = pygame.Vector2(150, 75)
 
@@ -146,7 +166,7 @@ class GuildScene(QuitableScene):
             Path.joinpath(SPRITES_FOLDER, "button_sprite.png")
         ).convert_alpha()
 
-        self.shop_button = Button(
+        self.market_button = Button(
             image=button_image.copy(),
             pos=buttons_center
             + pygame.Vector2(
@@ -154,7 +174,7 @@ class GuildScene(QuitableScene):
                 0,
             ),
             size=button_size,
-            callback=self._button_stab,
+            callback=self.market_window.activate,
             text="Market",
         )
 
@@ -162,7 +182,7 @@ class GuildScene(QuitableScene):
             image=button_image.copy(),
             pos=buttons_center,
             size=button_size,
-            callback=self._button_stab,
+            callback=self.hire_window.activate,
             text="Hire",
         )
 
@@ -174,9 +194,12 @@ class GuildScene(QuitableScene):
                 0,
             ),
             size=button_size,
-            callback=self._button_stab,
+            callback=self.storage_window.activate,
             text="Storage",
         )
 
     def _button_stab(self):
         self.logger.debug("Button pressed")
+        self.test_window.active = True
+
+        self.all_windows.append(self.test_window)

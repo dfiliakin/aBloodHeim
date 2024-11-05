@@ -1,8 +1,11 @@
 import logging
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 from scenes import GuildScene, MainMenuScene
-from toolbox.scene import Status as SceneStatus
+
+if TYPE_CHECKING:
+    from toolbox.scene import Status as SceneStatus
 
 
 class GameState(ABC):
@@ -10,7 +13,7 @@ class GameState(ABC):
         self.game = None
         self.scene = None
 
-    def run(self) -> SceneStatus:
+    def run(self) -> "SceneStatus":
         return self.scene.run()
 
     @abstractmethod
