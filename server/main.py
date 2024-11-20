@@ -1,20 +1,18 @@
-import pygame
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-pygame.init()
+app = FastAPI()
 
-import logging
-
-from game import Game
-
-logging.basicConfig(level=logging.DEBUG)
-
-screen = pygame.display.set_mode((800, 600))
-
-
-def main():
-    Game(screen)
-    pygame.quit()
+# CORS setup to allow requests from your frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # React dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-if __name__ == "__main__":
-    main()
+@app.get("/v1/test")
+async def test_endpoint():
+    return {"message": "Hello from FastAPI!"}
