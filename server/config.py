@@ -1,1 +1,1 @@
-from pathlib import Path
+ALLOWED_ORIGINS = ["http://localhost:3000"]

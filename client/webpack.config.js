@@ -1,5 +1,10 @@
+const webpack = require('webpack');
+const dotenv = require('dotenv');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// Load variables from the .env file
+const env = dotenv.config().parsed || {};
 
 module.exports = {
     mode: 'development', // or 'production'
@@ -28,8 +33,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './public/index.html',
         }),
+
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(env), // Inject all environment variables
+        }),
     ],
     devServer: {
+        port: 3000,
         static: './dist',
     },
 };

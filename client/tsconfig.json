@@ -25,7 +25,11 @@
         "noImplicitAny": true,
 
         /* Completeness */
-        "skipLibCheck": true
+        "skipLibCheck": true,
+
+        "paths": {
+            "@/api/*": ["./src/api/*"],
+        }
     },
     "exclude": ["webpack.config.js"]
 }
