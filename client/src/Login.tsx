@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -7,28 +7,43 @@ const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
     setErrorMessage('');
 
     try {
-      // Make a POST request to your FastAPI backend
-      const response = await axios.post(`${process.env.BACKEND_URL}/v1/login`, {
-        username,
-        password,
+      const response = await fetch(`${process.env.BACKEND_URL}/v0/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `username=${username}&password=${password}`,
       });
 
-      // Handle successful login (e.g., save token, redirect user)
-      console.log('Login successful:', response.data);
-      // For now, let's just log the response
-      alert('Login successful');
-    } catch (error: any) {
-      // Handle error (invalid credentials, server errors)
-      setErrorMessage(`Invalid username or password: ${process.env.BACKEND_URL}/v1/login`);
-    } finally {
-      setIsLoading(false);
+
+      if (!response.ok) {
+        // Extract error message from the response (if available)
+        const errorData = await response.json();
+        const errorMessage = errorData.detail || 'Login failed';
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+
+      if (data.access_token) {
+        sessionStorage.setItem('authToken', data.access_token); // Store JWT in sessionStorage
+        navigate('/guild'); // Redirect to dashboard or another protected page
+
+      } else {
+        alert('Login failed: ' + data.message);
+      }
+
+    } catch (error) {
+      console.log('Login error:', error);
+      alert('Login error');
     }
+
   };
 
   return (

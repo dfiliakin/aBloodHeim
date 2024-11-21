@@ -16,19 +16,14 @@ export class BackendEndpoint {
         body: User
     ) => EndpointInterface<User> = body => {
         return {
-            endpoint: "/v1/authorized-users",
+            endpoint: "/v0/user",
             method: "POST",
             body: body,
         };
     };
 
-    static readonly GetUsers: EndpointInterface = {
-        endpoint: "/v1/authorized-users",
-        method: "GET",
-    };
-
-    static readonly Logout: EndpointInterface = {
-        endpoint: "/users/logout",
+    static readonly GetUser: EndpointInterface = {
+        endpoint: "/v0/user",
         method: "GET",
     };
 

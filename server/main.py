@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from api import auth
+from config import ALLOWED_ORIGINS, HASHING_ALGORITHM, SECRET_KEY
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
 
-from config import ALLOWED_ORIGINS
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="v0/auth/login")
 
 app = FastAPI()
 
@@ -14,23 +17,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(auth.router)
 
 
-@app.get("/v1/test")
-async def test_endpoint():
-    return {"message": "Hello from FastAPI!"}
+@app.get("/v0/test")
+async def test_endpoint(token: str = Depends(oauth2_scheme)):
+    """Protected endpoint"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[HASHING_ALGORITHM])
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return {"message": "Access granted", "username": username}
 
-
-# Pydantic model to parse the login request body
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-
-@app.post("/v1/login")
-async def login(request: LoginRequest):
-    # Simple validation (replace with real validation logic, e.g. checking against a database)
-    if request.username == "admin" and request.password == "password":
-        return {"message": "Login successful"}
-    else:
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
