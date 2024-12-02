@@ -20,11 +20,17 @@ const Guild: React.FC = () => {
                     'Content-Type': 'application/json',
                 }
             },);
+
+            if (!res.ok) {
+                throw new Error('Failed to fetch');
+            }
+
             const data = await res.json();
             setResponse(data.message); // Assuming backend returns { message: "Success" }
+
         } catch (error) {
             console.error('Error:', error);
-            setResponse('Failed to reach backend');
+            alert('HTTPS Error: Self-signed certificate issue in development');
         }
     };
 

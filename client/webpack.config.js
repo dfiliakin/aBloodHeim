@@ -39,7 +39,14 @@ module.exports = {
         }),
     ],
     devServer: {
+        static: path.join(__dirname, 'public'),
         port: 3000,
-        static: './dist',
+        server: {
+            type: 'https',
+            options: {
+                key: path.join(__dirname, '../key.pem'),
+                cert: path.join(__dirname, '../cert.pem'),
+            },
+        },
     },
 };
